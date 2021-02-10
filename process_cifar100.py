@@ -96,6 +96,6 @@ class Preprocess_Cifar100:
 
 
 
-
-Preprocess_Cifar100().process_data(train=True)
-Preprocess_Cifar100().process_data(train=False)
+p = Preprocess_Cifar100()
+p.process_data(train=True) #process the training set
+p.process_data(train=False) #process the testing set
