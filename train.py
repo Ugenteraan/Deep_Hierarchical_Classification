@@ -8,9 +8,11 @@ from torch.optim import Adam
 from torchsummary import summary
 from torchvision import transforms
 
+from level_dict import hierarchy
 from runtime_args import args
 from load_dataset import LoadDataset
 from  model import resnet50
+from model.hierarchical_loss import HierarchicalLossNetwork
 
 device = torch.device("cuda:0" if torch.cuda.is_available() and args.device == 'gpu' else 'cpu')
 
@@ -21,15 +23,36 @@ train_generator = DataLoader(train_dataset, batch_size=args.batch_size, shuffle=
 test_generator = DataLoader(test_dataset, batch_size=args.batch_size, shuffle=args.no_shuffle, num_workers=args.num_workers)
 
 model = resnet50.ResNet50()
+optimizer = Adam(model.parameters(), lr=args.learning_rate)
+
 
 model = model.to(device)
 
+HLN = HierarchicalLossNetwork(metafile_path=args.metafile, hierarchical_labels=hierarchy, device=device)
 
-# for i, sample in tqdm(enumerate(train_generator)):
 
-#     batch_x, batch_y1, batch_y2 = sample['image'].to(device), sample['label_1'].to(device), sample['label_2'].to(device)
-#     print(batch_y1, batch_y2)
+for epoch_idx in range(args.epoch):
 
-#     a,b = model(batch_x)
-#     # print(a,b)
+    epoch_loss = 0
+    for i, sample in tqdm(enumerate(train_generator)):
+
+
+        batch_x, batch_y1, batch_y2 = sample['image'].to(device), sample['label_1'].to(device), sample['label_2'].to(device)
+        optimizer.zero_grad()
+
+        superclass_pred,subclass_pred = model(batch_x)
+        prediction = [superclass_pred,subclass_pred]
+        dloss = HLN.calculate_dloss(prediction, [batch_y1, batch_y2])
+        lloss = HLN.calculate_lloss(prediction, [batch_y1, batch_y2])
+
+        total_loss = lloss + dloss
+        total_loss.backward()
+        optimizer.step()
+        epoch_loss += total_loss.item()
+    print(f'Loss at {epoch_idx} : {epoch_loss}')
+
+
+
+
+
 

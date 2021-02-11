@@ -1,3 +1,0 @@
-'''Hierarchical Loss Network
-'''
-
