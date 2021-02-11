@@ -7,31 +7,12 @@ import csv
 import cv2
 from torch.utils.data import Dataset
 from level_dict import hierarchy
+from helper import read_meta
 
 
 class LoadDataset(Dataset):
     '''Reads the given csv file and loads the data.
     '''
-
-    @staticmethod
-    def unpickle(file):
-        '''Unpickle the given file
-        '''
-
-        with open(file, 'rb') as f:
-            res = pickle.load(f, encoding='bytes')
-        return res
-
-    @staticmethod
-    def classes(metafile):
-        '''Reads the available classes from the meta file.
-        '''
-        meta_data = LoadDataset.unpickle(metafile)
-        fine_label_names = [t.decode('utf8') for t in meta_data[b'fine_label_names']]
-        coarse_label_names = [t.decode('utf8') for t in meta_data[b'coarse_label_names']]
-
-
-        return coarse_label_names, fine_label_names
 
 
     def __init__(self, csv_path, cifar_metafile, image_size=32, image_depth=3, return_label=True, transform=None):
@@ -47,7 +28,7 @@ class LoadDataset(Dataset):
         self.meta_filename = cifar_metafile
         self.transform = transform
         self.data_list = self.csv_to_list()
-        self.coarse_labels, self.fine_labels = LoadDataset.classes(self.meta_filename)
+        self.coarse_labels, self.fine_labels = read_meta(self.meta_filename)
 
         #check if the hierarchy dictionary is consistent with the csv file
         for k,v in hierarchy.items():
