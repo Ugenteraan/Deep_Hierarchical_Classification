@@ -13,6 +13,7 @@ from runtime_args import args
 from load_dataset import LoadDataset
 from  model import resnet50
 from model.hierarchical_loss import HierarchicalLossNetwork
+from helper import calculate_accuracy
 
 device = torch.device("cuda:0" if torch.cuda.is_available() and args.device == 'gpu' else 'cpu')
 
@@ -33,7 +34,10 @@ HLN = HierarchicalLossNetwork(metafile_path=args.metafile, hierarchical_labels=h
 
 for epoch_idx in range(args.epoch):
 
+    i = 0
     epoch_loss = 0
+    epoch_superclass_accuracy = 0
+    epoch_subclass_accuracy = 0
     for i, sample in tqdm(enumerate(train_generator)):
 
 
@@ -49,7 +53,14 @@ for epoch_idx in range(args.epoch):
         total_loss.backward()
         optimizer.step()
         epoch_loss += total_loss.item()
-    print(f'Loss at {epoch_idx} : {epoch_loss}')
+        epoch_superclass_accuracy += calculate_accuracy(predictions=prediction[0], labels=batch_y1)
+        epoch_subclass_accuracy += calculate_accuracy(predictions=prediction[1], labels=batch_y2)
+
+
+
+    print(f'Loss at {epoch_idx} : {epoch_loss/(i+1)}')
+    print(f'Superclass accuracy at {epoch_idx} : {epoch_superclass_accuracy/(i+1)}')
+    print(f'Subclass accuracy at {epoch_idx} : {epoch_subclass_accuracy/(i+1)}')
 
 
 
