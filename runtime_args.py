@@ -9,6 +9,7 @@ parser.add_argument('--train_csv', type=str, help='Specify the path to the train
 parser.add_argument('--test_csv', type=str, help='Specify the path to the test csv file.', default='./dataset/test.csv')
 parser.add_argument('--metafile', type=str, help='Specify the path to the test csv file.', default='./dataset/pickle_files/meta')
 parser.add_argument('--model_save_path', type=str, help='Specify the path to save the model.', default='./')
+parser.add_argument('--graphs_folder', type=str, help='Specify the path to save the graphs.', default='./graph_folder/')
 parser.add_argument('--epoch', type=int, help='Specify the number of epochs for the training.', default=100)
 parser.add_argument('--batch_size', type=int, help='Specify the batch size to be used during training/testing.', default=10)
 parser.add_argument('--num_classes', type=int, help='Specify the number of classes the dataset has.', default=6)

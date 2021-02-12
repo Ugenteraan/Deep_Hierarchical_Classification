@@ -4,14 +4,14 @@
 import pickle
 import torch
 import torch.nn as nn
-from ..helper import read_meta
+from helper import read_meta
 
 
 class HierarchicalLossNetwork:
     '''Logics to calculate the loss of the model.
     '''
 
-    def __init__(self, metafile_path, hierarchical_labels, device='cpu', total_level=2, alpha=1, beta=1, p_loss=5):
+    def __init__(self, metafile_path, hierarchical_labels, device='cpu', total_level=2, alpha=1, beta=0.8, p_loss=3):
         '''Param init.
         '''
         self.total_level = total_level
@@ -39,7 +39,7 @@ class HierarchicalLossNetwork:
         '''
 
         #check using the dictionary whether the current level's prediction belongs to the superclass (prediction from the prev layer)
-        bool_tensor = [current_level[i] in self.numeric_hierarchy[previous_level[i].item()] for i in range(previous_level.size()[0])]
+        bool_tensor = [not current_level[i] in self.numeric_hierarchy[previous_level[i].item()] for i in range(previous_level.size()[0])]
 
         return torch.FloatTensor(bool_tensor).to(self.device)
 
@@ -67,9 +67,9 @@ class HierarchicalLossNetwork:
 
             D_l = self.check_hierarchy(current_lvl_pred, prev_lvl_pred)
 
-            l_prev = torch.where(prev_lvl_pred == true_labels[l-1], 1.0, 0.)
-            l_curr = torch.where(current_lvl_pred == true_labels[l], 1.0, 0.)
+            l_prev = torch.where(prev_lvl_pred == true_labels[l-1], torch.FloatTensor([1]).to(self.device), torch.FloatTensor([0]).to(self.device))
+            l_curr = torch.where(current_lvl_pred == true_labels[l], torch.FloatTensor([1]).to(self.device), torch.FloatTensor([0]).to(self.device))
 
-            dloss += torch.sum(-1*torch.pow(self.p_loss, D_l*l_prev)*torch.pow(self.p_loss, D_l*l_curr))
+            dloss += torch.sum(torch.pow(self.p_loss, D_l*l_prev)*torch.pow(self.p_loss, D_l*l_curr) - 1)
 
         return self.beta * dloss
