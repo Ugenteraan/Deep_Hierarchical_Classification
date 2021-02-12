@@ -32,7 +32,6 @@ test_generator = DataLoader(test_dataset, batch_size=args.batch_size, shuffle=ar
 model = resnet50.ResNet50()
 optimizer = Adam(model.parameters(), lr=args.learning_rate)
 
-
 model = model.to(device)
 
 HLN = HierarchicalLossNetwork(metafile_path=args.metafile, hierarchical_labels=hierarchy, device=device)
@@ -80,9 +79,9 @@ for epoch_idx in range(args.epoch):
 
 
 
-    print(f'Training Loss at {epoch_idx} : {sum(epoch_loss)/(i+1)}')
-    print(f'Training Superclass accuracy at {epoch_idx} : {sum(epoch_superclass_accuracy)/(i+1)}')
-    print(f'Training Subclass accuracy at {epoch_idx} : {sum(epoch_subclass_accuracy)/(i+1)}')
+    print(f'Training Loss at epoch {epoch_idx} : {sum(epoch_loss)/(i+1)}')
+    print(f'Training Superclass accuracy at epoch {epoch_idx} : {sum(epoch_superclass_accuracy)/(i+1)}')
+    print(f'Training Subclass accuracy at epoch {epoch_idx} : {sum(epoch_subclass_accuracy)/(i+1)}')
 
 
     j = 0
@@ -109,9 +108,9 @@ for epoch_idx in range(args.epoch):
             epoch_subclass_accuracy.append(calculate_accuracy(predictions=prediction[1], labels=batch_y2))
 
 
-    test_epoch_loss.append(sum(epoch_loss)/(i+1))
-    test_epoch_superclass_accuracy.append(sum(epoch_superclass_accuracy)/(i+1))
-    test_epoch_subclass_accuracy.append(sum(epoch_subclass_accuracy)/(i+1))
+    test_epoch_loss.append(sum(epoch_loss)/(j+1))
+    test_epoch_superclass_accuracy.append(sum(epoch_superclass_accuracy)/(j+1))
+    test_epoch_subclass_accuracy.append(sum(epoch_subclass_accuracy)/(j+1))
 
     #plot accuracy and loss graph
     plot_loss_acc(path=args.graphs_folder, num_epoch=epoch_idx, train_accuracies_superclass=train_epoch_superclass_accuracy,
@@ -119,9 +118,9 @@ for epoch_idx in range(args.epoch):
                             test_accuracies_superclass=test_epoch_superclass_accuracy, test_accuracies_subclass=test_epoch_subclass_accuracy,
                             test_losses=test_epoch_loss)
 
-    print(f'Testing Loss at {epoch_idx} : {sum(epoch_loss)/(j+1)}')
-    print(f'Testing Superclass accuracy at {epoch_idx} : {sum(epoch_superclass_accuracy)/(j+1)}')
-    print(f'Testing Subclass accuracy at {epoch_idx} : {sum(epoch_subclass_accuracy)/(j+1)}')
+    print(f'Testing Loss at epoch {epoch_idx} : {sum(epoch_loss)/(j+1)}')
+    print(f'Testing Superclass accuracy at epoch {epoch_idx} : {sum(epoch_superclass_accuracy)/(j+1)}')
+    print(f'Testing Subclass accuracy at epoch {epoch_idx} : {sum(epoch_subclass_accuracy)/(j+1)}')
     print('-------------------------------------------------------------------------------------------')
 
 

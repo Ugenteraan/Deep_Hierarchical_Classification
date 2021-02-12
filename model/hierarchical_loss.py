@@ -70,6 +70,6 @@ class HierarchicalLossNetwork:
             l_prev = torch.where(prev_lvl_pred == true_labels[l-1], torch.FloatTensor([1]).to(self.device), torch.FloatTensor([0]).to(self.device))
             l_curr = torch.where(current_lvl_pred == true_labels[l], torch.FloatTensor([1]).to(self.device), torch.FloatTensor([0]).to(self.device))
 
-            dloss += torch.sum(torch.pow(self.p_loss, D_l*l_prev)*torch.pow(self.p_loss, D_l*l_curr) - 1)
+            dloss += torch.sum(-1*torch.pow(self.p_loss, D_l*l_prev)*torch.pow(self.p_loss, D_l*l_curr))
 
         return self.beta * dloss
