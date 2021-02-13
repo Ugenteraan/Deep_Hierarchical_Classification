@@ -54,6 +54,7 @@ for epoch_idx in range(args.epoch):
     epoch_superclass_accuracy = []
     epoch_subclass_accuracy = []
 
+    model.train()
     for i, sample in tqdm(enumerate(train_generator)):
 
 
@@ -90,6 +91,7 @@ for epoch_idx in range(args.epoch):
     epoch_superclass_accuracy = []
     epoch_subclass_accuracy = []
 
+    model.eval()
     with torch.set_grad_enabled(False):
         for j, sample in tqdm(enumerate(test_generator)):
 
