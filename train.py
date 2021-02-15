@@ -128,11 +128,5 @@ for epoch_idx in range(args.epoch):
     print(f'Testing Subclass accuracy at epoch {epoch_idx} : {sum(epoch_subclass_accuracy)/(j+1)}')
     print('-------------------------------------------------------------------------------------------')
 
-
-
-
-
-
-
-
-
+    torch.save(model.state_dict(), args.model_save_path.rstrip('/')+'dhc.pth')
+    print("Model saved!")
