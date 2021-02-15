@@ -1,6 +1,8 @@
 
 
-**/dataset/**
+dataset/images/**
+dataset/pickle_files/train
+dataset/pickle_files/test
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
