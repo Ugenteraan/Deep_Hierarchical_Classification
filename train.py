@@ -22,7 +22,11 @@ device = torch.device("cuda:0" if torch.cuda.is_available() and args.device == '
 if not os.path.exists(args.graphs_folder) : os.makedirs(args.graphs_folder)
 
 train_dataset = LoadDataset(image_size=args.img_size, image_depth=args.img_depth, csv_path=args.train_csv,
-                            cifar_metafile=args.metafile, transform=transforms.ToTensor())
+                            cifar_metafile=args.metafile, transform=transforms.Compose([transforms.RandomAffine(40, scale=(.85, 1.15), shear=0, resample=0),
+                                transforms.RandomHorizontalFlip(),
+                                transforms.RandomPerspective(distortion_scale=0.2),
+                                transforms.ColorJitter(brightness=0.5, contrast=0.5, saturation=0.5),
+                                 transforms.ToTensor()]))
 test_dataset = LoadDataset(image_size=args.img_size, image_depth=args.img_depth, csv_path=args.test_csv,
                             cifar_metafile=args.metafile, transform=transforms.ToTensor())
 
@@ -33,7 +37,6 @@ model = resnet50.ResNet50()
 optimizer = Adam(model.parameters(), lr=args.learning_rate)
 
 model = model.to(device)
-
 HLN = HierarchicalLossNetwork(metafile_path=args.metafile, hierarchical_labels=hierarchy, device=device)
 
 

@@ -65,7 +65,7 @@ class ResNet50(nn.Module):
 
         self.in_channels = 64
         self.expansion = 4
-        self.num_blocks = [3, 3, 3, 2]
+        self.num_blocks = [3, 4, 6, 3]
 
         self.conv_block1 = nn.Sequential(nn.Conv2d(kernel_size=3, stride=1, in_channels=image_depth, out_channels=self.in_channels, padding=1, bias=False),
                                             nn.BatchNorm2d(self.in_channels),
@@ -75,7 +75,7 @@ class ResNet50(nn.Module):
         self.layer2 = self.make_layer(out_channels=128, num_blocks=self.num_blocks[1], stride=2, use_cbam=use_cbam)
         self.layer3 = self.make_layer(out_channels=256, num_blocks=self.num_blocks[2], stride=1, use_cbam=use_cbam)
         self.layer4 = self.make_layer(out_channels=512, num_blocks=self.num_blocks[3], stride=2, use_cbam=use_cbam)
-        self.avgpool = nn.AvgPool2d(7)
+        self.avgpool = nn.AdaptiveAvgPool2d((1, 1))
 
         self.linear_lvl1 = nn.Linear(512*self.expansion, num_classes[0])
         self.linear_lvl2 = nn.Linear(512*self.expansion, num_classes[1])

@@ -5,6 +5,7 @@ import os
 import pickle
 import csv
 import cv2
+from PIL import Image
 from torch.utils.data import Dataset
 from level_dict import hierarchy
 from helper import read_meta
@@ -74,12 +75,15 @@ class LoadDataset(Dataset):
         if self.image_size != 32:
             cv2.resize(image, (self.image_size, self.image_size))
 
+
+        image = Image.fromarray(image)
+
         if self.transform:
             image = self.transform(image)
 
         if self.return_label:
             return {
-                'image':image,
+                'image':image/255.0,
                 'label_1': self.coarse_labels.index(superclass.strip(' ')),
                 'label_2': self.fine_labels.index(subclass.strip(' '))
             }
