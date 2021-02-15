@@ -21,14 +21,49 @@ To know more about the arguments that can be supplied to the train file, run
 </div>
 <div align="center">
  <figure class="image">
-  <img src="readme_images/architecture.png">
-  <figcaption> Image Source : https://arxiv.org/pdf/2005.06692.pdf </figcaption></div>
+  <img src="readme_images/architecture.png"><br />
+  <figcaption> Image Source : https://arxiv.org/pdf/2005.06692.pdf </figcaption>
 </figure>
+</div>
 
 The feature vector from the backbone network is first used to identify the superclass of the input image. This is done through the use of a fully-connected layers where the final layer's number of neurons is the same as the number of superclasses. In our case, the final layer produces a 20-D prediction vector. Softmax will then be applied to this 20-D vector to get a prediction of the superclass.
 
 At the same time, the same feature vector is also used to determine the subclass of the input image. The feature vector will first go through another fully-connected layers where the final layer's number of neurons is the same as the number of subclasses. In other words, 100-D vector is produced. This 100-D vector will first be concatenated with the previous level's prediction (the 20-D vector before softmax is applied)  as shown in the above figure and then again be transformed into a 100-D vector ( This operation is not shown in the image. Take a look at **eq.4** from the original paper for more info.) through the use of one more fully-connected layers.  This final 100-D vector will undergo a softmax function to produce the final prediction of the subclass of the input image.
 
+There are 2 types of losses for this network. The second loss type punishes the network when the prediction of the subclass does not belong to its superclass. In this implementation, that particular loss function is slightly modified. However, experiments showed that the modification does not affect the performance at all. For more information, take a look at ```model/hierarchical_loss.py``` file.
+
+### Experimental Results
+As mentioned earlier, the DHC model was tested on Cifar-100 dataset. Figures below show the result of the experiment.
+
+<div align="center"> 
+<b>Model's Loss</b>
+</div>
+<div align="center">
+ <figure class="image">
+  <img src="readme_images/loss_epoch.png"><br />
+  <figcaption> Loss of the model over 100 epochs. </figcaption>
+</figure>
+</div>
+
+<div align="center"> 
+<b>Model's Accuracy on Superclass</b>
+</div>
+<div align="center">
+ <figure class="image">
+  <img src="readme_images/accuracy_superclass_epoch.png"><br />
+  <figcaption> Accuracy of the model on the superclass level over 100 epochs. </figcaption>
+</figure>
+</div>
+
+<div align="center"> 
+<b>Model's Accuracy on Subclass</b>
+</div>
+<div align="center">
+ <figure class="image">
+  <img src="readme_images/accuracy_subclass_epoch.png"><br />
+  <figcaption> Accuracy of the model on the subclass level over 100 epochs. </figcaption>
+</figure>
+</div>
 
 
 
