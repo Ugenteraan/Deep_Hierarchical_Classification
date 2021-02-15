@@ -21,7 +21,7 @@ To know more about the arguments that can be supplied to the train file, run
 </div>
  <figure class="image">
   <img src="readme_images/arch.png">
-  <figcaption> Source : [Original paper][1] </figcaption></div>
+  <figcaption> Source : [Deep Hierarchical Classification for Category Prediction in E-commerce System][1] </figcaption></div>
 </figure>
 
 
