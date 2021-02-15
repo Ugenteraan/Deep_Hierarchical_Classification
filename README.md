@@ -35,9 +35,7 @@ There are 2 types of losses for this network. The second loss type punishes the 
 ### Experimental Results
 As mentioned earlier, the DHC model was tested on Cifar-100 dataset. Figures below show the result of the experiment.
 
-<div align="center"> 
-<b>Model's Loss</b>
-</div>
+
 <div align="center">
  <figure class="image">
   <img src="readme_images/loss_epoch.png"><br />
@@ -45,9 +43,7 @@ As mentioned earlier, the DHC model was tested on Cifar-100 dataset. Figures bel
 </figure>
 </div>
 
-<div align="center"> 
-<b>Model's Accuracy on Superclass</b>
-</div>
+
 <div align="center">
  <figure class="image">
   <img src="readme_images/accuracy_superclass_epoch.png"><br />
@@ -55,9 +51,7 @@ As mentioned earlier, the DHC model was tested on Cifar-100 dataset. Figures bel
 </figure>
 </div>
 
-<div align="center"> 
-<b>Model's Accuracy on Subclass</b>
-</div>
+
 <div align="center">
  <figure class="image">
   <img src="readme_images/accuracy_subclass_epoch.png"><br />
@@ -65,6 +59,21 @@ As mentioned earlier, the DHC model was tested on Cifar-100 dataset. Figures bel
 </figure>
 </div>
 
+## Conclusion
+One of the older technique to perform classifications on a dataset with multiple hierarchy was to have separate models for each level of hierarchy. This technique ensures the accuracy of the prediction is not lost due to the hierarchical structure of the class. However, it is not cost-effective as there'll be many models in the end to be managed. 
+
+Therefore, it is crucial to know if this proposed DHC algorithm does any trade-off between the accuracy of the predictions and the cost of having multiple models or not. For confirmation, another experiment was done using only the ResNet-50 with CBAM on Cifar-100 subclass level. The figure below shows the accuracy of the model. 
+
+<div align="center">
+ <figure class="image">
+  <img src="readme_images/resnet_accuracy_epoch.png"><br />
+  <figcaption> Accuracy of ResNet-50 with CBAM on the subclass level over 100 epochs. </figcaption>
+</figure>
+</div>
+
+From the figure above it can be seen that the ResNet-50 with CBAM model alone achieves almost the same accuracy as the DHC. Note that DHC has about 10% more accuracy than ResNet-50 with CBAM. This might be due to the use of slightly more aggressive data augmentation during training for DHC. 
+
+In conclusion, for Cifar-100 dataset with 2 levels of hierarchy, proposed DHC algorithm does not forsake any accuracy in order to save the cost of having multiple models at all. Perhaps with the use of a different backbone network, the accuracy can be greatly improved.
 
 
 
